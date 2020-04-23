@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import "./App.scss";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+//TODO: REMOVE THIS AND REPLACE WITH TERNARY
 import clsx from "clsx";
 import Drawer from "@material-ui/core/Drawer";
-// import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
-// import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -18,15 +17,15 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import { AppBar, CssBaseline, Typography } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 import VehicleInfo from "./VehicleInfo";
 
+
+
 const drawerWidth = 240;
-									
 const useStyles = makeStyles((theme) => ({
-  root: {
-    // display: 'flex',
-  },
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -66,7 +65,8 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: -drawerWidth,
+		marginLeft: -drawerWidth,
+		type: "dark",
   },
   contentShift: {
     transition: theme.transitions.create("margin", {
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
-  },
+	},
 }));
 
 const App = () => {
@@ -93,12 +93,9 @@ const App = () => {
   };
 
   window.addEventListener("message", (event) => {
-		console.log(JSON.stringify(event.data))
     if (event.data.openMechanicMenu) {
       setShowHideToggler(true);
       setVehicleProps(event.data.vehicleProps);
-    } else {
-      setShowHideToggler(false);
     }
   });
 
@@ -118,8 +115,6 @@ const App = () => {
   return (
     <div className={showHideToggler ? "container" : "hide-container"}>
       <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <div className={classes.root}>
           <AppBar
             position="relative"
             className={clsx(classes.appBar, {
@@ -183,11 +178,7 @@ const App = () => {
                 ))}
               </List>
             </Drawer>
-            <div
-              className={clsx(classes.content, {
-                [classes.contentShift]: open,
-              })}
-            >
+            <Paper className = {open ? classes.contentShift : classes.content }>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
               Rhoncus dolor purus non enim praesent elementum facilisis leo vel.
@@ -201,9 +192,8 @@ const App = () => {
               lobortis feugiat vivamus at augue. At augue eget arcu dictum
               varius duis at consectetur lorem. Velit sed ullamcorper morbi
               tincidunt. Lorem donec massa sapien faucibus et molestie ac.
-            </div>
+            </Paper>
           </div>
-        </div>
       </ThemeProvider>
     </div>
   );
