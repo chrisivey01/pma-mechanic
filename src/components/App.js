@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./App.scss";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import * as apis from '../apis/apis';
+
 //TODO: REMOVE THIS AND REPLACE WITH TERNARY
 import clsx from "clsx";
 import Drawer from "@material-ui/core/Drawer";
@@ -79,7 +81,10 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const [showHideToggler, setShowHideToggler] = useState(false);
-  const [vehicleProps, setVehicleProps] = useState({});
+	const [vehicleProps, setVehicleProps] = useState({});
+	const [ticker, setTicker] = useState(100);
+  const [name, setName] = useState('');
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -94,7 +99,10 @@ const App = () => {
 
   window.addEventListener("message", (event) => {
     if (event.data.openMechanicMenu) {
-      setShowHideToggler(true);
+			setShowHideToggler(true);
+			
+			setTicker(event.data.ticker)
+			setName(event.data.name)
       setVehicleProps(event.data.vehicleProps);
     }
   });
@@ -102,7 +110,7 @@ const App = () => {
   document.addEventListener("keydown", (event) => {
     if (event.keyCode === 27) {
       setShowHideToggler(false);
-      // apis.closeEmployees();
+      apis.closeMechanics();
     }
   });
 
@@ -179,19 +187,12 @@ const App = () => {
               </List>
             </Drawer>
             <Paper className = {open ? classes.contentShift : classes.content }>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Rhoncus dolor purus non enim praesent elementum facilisis leo vel.
-              Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-              gravida rutrum quisque non tellus. Convallis convallis tellus id
-              interdum velit laoreet id donec ultrices. Odio morbi quis commodo
-              odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum
-              est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-              Metus vulputate eu scelerisque felis imperdiet proin fermentum
-              leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt
-              lobortis feugiat vivamus at augue. At augue eget arcu dictum
-              varius duis at consectetur lorem. Velit sed ullamcorper morbi
-              tincidunt. Lorem donec massa sapien faucibus et molestie ac.
+              <VehicleInfo
+								vehicleProps={vehicleProps}
+								ticker={ticker}
+								name={name}
+
+								/>
             </Paper>
           </div>
       </ThemeProvider>
