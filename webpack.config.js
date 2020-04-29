@@ -1,11 +1,7 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
-
 const config = {
   entry: "./src/index.js",
 
-  // resolve:{
-  //   extensions:['.js', '.jsx']
-  // },
   module: {
     rules: [
       {
@@ -46,8 +42,6 @@ const config = {
   plugins: [
     new HtmlWebPackPlugin({
       template: "./public/index.html",
-      filename: "./index.html",
-
     })
   ],
   devtool : 'source-map',

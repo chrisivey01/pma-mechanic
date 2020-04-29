@@ -1,30 +1,28 @@
 import React, { useState } from "react";
-import "./App.scss";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import * as apis from '../apis/apis';
+import { HashRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-//TODO: REMOVE THIS AND REPLACE WITH TERNARY
-import clsx from "clsx";
+import "./App.scss";
+import { makeStyles } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import * as apis from "../apis/apis";
+
+import VehicleInfo from "./VehicleInfo";
+import VehicleUpgrades from "./VehicleUpgrades";
+import VehicleRepairs from "./VehicleRepairs";
+import ClientInformation from "./ClientInformation";
+
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import AppBar from "@material-ui/core/AppBar";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import VehicleInfo from "./VehicleInfo";
 
-
+import { setVehicleData } from "../store/actions/index";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    backgroundColor: "#333333",
   },
   appBarShift: {
     transition: theme.transitions.create(["margin", "width"], {
@@ -52,13 +51,12 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
+    flexDirection: "unset",
+    zIndex: 0,
   },
   drawerHeader: {
     display: "flex",
     alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
     justifyContent: "flex-end",
   },
   content: {
@@ -67,43 +65,48 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-		marginLeft: -drawerWidth,
-		type: "dark",
+    marginLeft: -drawerWidth,
+    width: "100%",
+    borderRadius: "0px",
   },
   contentShift: {
+    padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
-	},
+    width: "100%",
+    borderRadius: "0px",
+    boxShadow: theme.shadows[0],
+  },
+  wrapper: {
+    display: "flex",
+  },
+  row: {
+    padding:"10px",
+    width: "100%",
+  },
 }));
 
-const App = () => {
+const App = (props) => {
   const [showHideToggler, setShowHideToggler] = useState(false);
-	const [vehicleProps, setVehicleProps] = useState({});
-	const [ticker, setTicker] = useState(100);
-  const [name, setName] = useState('');
-
   const classes = useStyles();
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+    if(open !== true){
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
   };
 
   window.addEventListener("message", (event) => {
     if (event.data.openMechanicMenu) {
-			setShowHideToggler(true);
-			
-			setTicker(event.data.ticker)
-			setName(event.data.name)
-      setVehicleProps(event.data.vehicleProps);
+      setShowHideToggler(true);
+      dispatch(setVehicleData(event.data));
     }
   });
 
@@ -123,28 +126,28 @@ const App = () => {
   return (
     <div className={showHideToggler ? "container" : "hide-container"}>
       <ThemeProvider theme={darkTheme}>
-          <AppBar
-            position="relative"
-            className={clsx(classes.appBar, {
-              [classes.appBarShift]: open,
-            })}
-          >
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                className={clsx(classes.menuButton, open && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" noWrap>
-                Persistent drawer
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <div className="ui-wrapper">
+        <AppBar
+          position="relative"
+          color="default"
+          className={open ? "appBar" : "appBarShift"}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={open ? "menuButton" : "hide"}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              Car Diagnostics
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Router>
+          <div className={classes.wrapper}>
             <Drawer
               className={classes.drawer}
               variant="persistent"
@@ -152,52 +155,47 @@ const App = () => {
               open={open}
               classes={{ paper: classes.drawerPaper }}
             >
-              <div className={classes.drawerHeader}>
-                <IconButton onClick={handleDrawerClose}>
-                  {theme.direction === "ltr" ? (
-                    <ChevronLeftIcon />
-                  ) : (
-                    <ChevronRightIcon />
-                  )}
-                </IconButton>
-              </div>
-              <Divider />
               <List>
-                {["Inbox", "Starred", "Send email", "Drafts"].map(
-                  (text, index) => (
-                    <ListItem button key={text}>
-                      <ListItemIcon>
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                      </ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  )
-                )}
-              </List>
-              <Divider />
-              <List>
-                {["All mail", "Trash", "Spam"].map((text, index) => (
-                  <ListItem button key={text}>
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                ))}
+                <Button className={classes.row} component={Link} to="/">
+                  Vehicle Inspection
+                </Button>
+                <Button className={classes.row} component={Link} to="/upgrade">
+                  Vehicle Upgrades
+                </Button>
+                <Button className={classes.row} component={Link} to="/repair">
+                  Vehicle Repairs
+                </Button>
+                <Button className={classes.row} component={Link} to="/clients">
+                  Clients
+                </Button>
               </List>
             </Drawer>
-            <Paper className = {open ? classes.contentShift : classes.content }>
-              <VehicleInfo
-								vehicleProps={vehicleProps}
-								ticker={ticker}
-								name={name}
-
-								/>
-            </Paper>
+            <Switch>
+              <React.Fragment>
+                <Paper
+                  className={open ? classes.contentShift : classes.content}
+                >
+                  <Route exact path="/">
+                    <VehicleInfo />
+                  </Route>
+                  <Route exact path="/upgrade">
+                    <VehicleUpgrades />
+                  </Route>
+                  <Route exact path="/repair">
+                    <VehicleRepairs />
+                  </Route>
+                  <Route exact path="/clients">
+                    <ClientInformation />
+                  </Route>
+                </Paper>
+              </React.Fragment>
+            </Switch>
           </div>
+        </Router>
       </ThemeProvider>
     </div>
   );
 };
+
 
 export default App;
