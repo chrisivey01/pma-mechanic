@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 const VehicleUpgrades = () => {
     return(
@@ -8,4 +9,8 @@ const VehicleUpgrades = () => {
     )
 }
 
-export default VehicleUpgrades
+const mapStateToProps = state => {
+
+}
+
+export default connect(mapStateToProps)(VehicleUpgrades);

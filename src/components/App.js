@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const App = (props) => {
+const App = () => {
   const [showHideToggler, setShowHideToggler] = useState(false);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -159,11 +159,11 @@ const App = (props) => {
                 <Button className={classes.row} component={Link} to="/">
                   Vehicle Inspection
                 </Button>
-                <Button className={classes.row} component={Link} to="/upgrade">
-                  Vehicle Upgrades
-                </Button>
                 <Button className={classes.row} component={Link} to="/repair">
                   Vehicle Repairs
+                </Button>
+                <Button className={classes.row} component={Link} to="/upgrade">
+                  Vehicle Upgrades
                 </Button>
                 <Button className={classes.row} component={Link} to="/clients">
                   Clients
@@ -196,6 +196,5 @@ const App = (props) => {
     </div>
   );
 };
-
 
 export default App;

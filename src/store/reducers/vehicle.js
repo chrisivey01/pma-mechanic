@@ -1,6 +1,9 @@
+import * as types from '../constants/action-types'
+
 const initialState = {
   name: "",
   ticker: 0,
+  number: "",
   stars: 0,
   vehicleProps: {
     plate:"",
@@ -14,18 +17,13 @@ const initialState = {
 
 const vehicleReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_VEHICLE_DATA":
+    case types.SET_VEHICLE_DATA:
       return {
-        name: action.data.name,
-        ticker: action.data.ticker,
-        stars: (action.data.ticker / 2) * .1,
-        vehicleProps:action.data.vehicleProps
-        // plate: action.data.vehicleProps.plate,
-        // modEngine: action.data.vehicleProps.modEngine,
-        // modBrakes: action.data.vehicleProps.modBrakes,
-        // modTurbo: action.data.vehicleProps.modTurbo,
-        // modTransmission: action.data.vehicleProps.modTransmission,
-        // modArmor: action.data.vehicleProps.modArmor,
+        name: action.carInfo.name,
+        ticker: action.carInfo.ticker,
+        stars: (action.carInfo.ticker / 2) * .1,
+        number: action.carInfo.number,
+        vehicleProps: action.carInfo.vehicleProps
       };
     default:
       return state;

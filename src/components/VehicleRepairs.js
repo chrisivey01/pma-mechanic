@@ -1,6 +1,7 @@
 import React from 'react';
+import { connect } from "react-redux";
 
-const VehicleRepairs = () => {
+const VehicleRepairs = props => {
     return (
         <div>
             Repairs info!
@@ -8,4 +9,9 @@ const VehicleRepairs = () => {
     )
 }
 
-export default VehicleRepairs;
+const mapStateToProps = state => {
+    return { data: state.vehicleReducer };
+};
+  
+export default connect(mapStateToProps)(VehicleRepairs);
+  

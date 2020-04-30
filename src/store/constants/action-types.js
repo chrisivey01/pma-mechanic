@@ -1,1 +1,2 @@
 export const SET_VEHICLE_DATA = "SET_VEHICLE_DATA";
+export const SET_CLIENT_LIST = "SET_CLIENT_LIST";
